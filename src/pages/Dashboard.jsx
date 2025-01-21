@@ -5,7 +5,8 @@ import { Layout } from "antd";
 // Importing components for each section
 import Production from "./Order"; // Create this component
 import Settings from "./Settings";     // Create this component
-import Support from "./Support";       // Create this component
+import Support from "./Support";   
+import JobCard from "./JobCard";       // Create this component
 
 // Import TopNav and SideNav components
 import TopNav from "../components/TopNav";
@@ -23,6 +24,8 @@ const Dashboard = () => {
     switch (selectedSection) {
       case "Order":
         return <Order />;
+        case "Jobcard":
+          return <JobCard />;
       case "settings":
         return <Settings />;
       case "support":
