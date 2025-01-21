@@ -6,7 +6,7 @@ export default function EditableTextField({ label,onChange,value }) {
   return (
     <Box
       component="form"
-      sx={{ '& > :not(style)': { m: 1, width: '25ch' } }}
+      sx={{ '& > :not(style)': { m: 1, width: '35ch' } }}
       noValidate
       autoComplete="off"
     >

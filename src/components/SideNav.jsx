@@ -16,6 +16,7 @@ const SideNav = ({ selectedSection, handleMenuClick }) => {
         onClick={handleMenuClick} // Update state on click
       >
         <Menu.Item key="Order">New Order</Menu.Item>
+        <Menu.Item key="Jobcard">Job Card</Menu.Item>
         <Menu.Item key="settings">Settings</Menu.Item>
         <Menu.Item key="support">Support</Menu.Item>
       </Menu>
