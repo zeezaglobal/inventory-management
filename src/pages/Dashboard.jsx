@@ -3,13 +3,14 @@ import React, { useState } from "react";
 import { Layout } from "antd";
 
 // Importing components for each section
-import Production from "./Production"; // Create this component
+import Production from "./Order"; // Create this component
 import Settings from "./Settings";     // Create this component
 import Support from "./Support";       // Create this component
 
 // Import TopNav and SideNav components
 import TopNav from "../components/TopNav";
 import SideNav from "../components/SideNav";
+import Order from "./Order";
 
 const Dashboard = () => {
   const [selectedSection, setSelectedSection] = useState("production"); // Default section
@@ -20,8 +21,8 @@ const Dashboard = () => {
 
   const renderSection = () => {
     switch (selectedSection) {
-      case "production":
-        return <Production />;
+      case "Order":
+        return <Order />;
       case "settings":
         return <Settings />;
       case "support":

@@ -11,7 +11,7 @@ const Login = () => {
     console.log("Login attempt with:", username, password);
 
     // Simulating authentication
-    if (username === "admin" && password === "admin12") {
+    if (username === "admin" && password === "admin") {
       message.success("Login successful!");
       navigate("/dashboard"); // Navigate to the dashboard or desired route after successful login
     } else {
