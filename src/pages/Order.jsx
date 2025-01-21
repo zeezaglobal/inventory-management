@@ -3,6 +3,7 @@ import React, { useState } from "react";
 
 import EditableTextField from "../components/EditableTextField";
 import List from "../components/List";
+import Table from "../components/TableComponent";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -62,6 +63,7 @@ const Order = () => {
       <Button className="Button" variant="contained" >
        Submit Work Order
       </Button>
+      <Table/>
     </div>
   );
 };
