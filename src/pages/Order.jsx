@@ -1,14 +1,13 @@
 import "../pages/Order.css";
 import React, { useState } from "react";
 
-import EditableTextField from "../components/EditableTextField";
+import WorkOrderFeild from "../components/WorkOrderFeild";
+import EditText from "../components/EditText";
 import List from "../components/List";
 import Table from "../components/TableComponent";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import ProductTableName from "../components/ProductNameTable";
+
+import { Button, InputNumber,DatePicker } from "antd";
 
 const Order = () => {
   const [nameList, setNameList] = useState([]);
@@ -19,7 +18,7 @@ const Order = () => {
   const handleChange = (e) => {
     setValue(e.target.value);
   };
-
+  const onChange = (e) => {};
   const handleAddProduct = () => {
     if (productName.trim() && value > 0) {
       // Add the product name and count as an object
@@ -31,39 +30,24 @@ const Order = () => {
 
   return (
     <div className="parent">
-      <EditableTextField label="Enter Work Order Number" />
-      <EditableTextField
-        label="Enter Product Name"
-        value={productName}
-        onChange={(e) => setProductName(e.target.value)}
-      />
-      <label htmlFor="number-picker">Product Count: </label>
-      <input
-        id="number-picker"
-        type="number"
-        value={value}
-        onChange={handleChange}
-        min="0"
-        max="100"
-        step="1"
-      />
-      <Button className="Button" variant="contained" onClick={handleAddProduct}>
-        Add Product
+        <WorkOrderFeild />
+        <DatePicker placeholder="Select Due Date" style={{ marginBottom: 12 }} onChange={onChange} />
+
+      <div className="firstline">
+      
+        <EditText placeholder="Enter Product Name" />
+        <InputNumber style={{ marginLeft: 12 }} min={1} max={50} defaultValue={1} onChange={onChange} />
+      
+      
+      </div>
+   
+      
+      <ProductTableName  />
+    
+      <Button className="Button" variant="contained">
+        Submit Work Order
       </Button>
-      <List items={nameList} />
-      <EditableTextField label="Customer Name" />
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DatePicker
-          label="Select Due Date"
-          value={dueDate}
-          onChange={(newDate) => setDueDate(newDate)}
-          renderInput={(params) => <TextField {...params} />}
-        />
-      </LocalizationProvider>
-      <Button className="Button" variant="contained" >
-       Submit Work Order
-      </Button>
-      <Table/>
+      <Table />
     </div>
   );
 };
