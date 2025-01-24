@@ -1,11 +1,9 @@
-.parent{
-    display: flex;
-    flex-direction: column;
-  
+.parent {
+  display: flex;
+  flex-direction: column;
 }
-.firstline{
-    display: flex;
-    flex-direction: row;
-   
-  
+.firstline {
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 15px;
 }
