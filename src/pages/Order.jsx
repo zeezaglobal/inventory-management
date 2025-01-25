@@ -9,18 +9,35 @@ const Order = () => {
   const [tableData, setTableData] = useState([]);
   const [pricev, setPrice] = useState(0);
   const [productName, setProductName] = useState("");
+  const [clientAddress, setclientAddress] = useState("");
+
   const [value, setValue] = useState(1);
+  const [status, setStatus] = useState(1);
   const [dueDate, setDueDate] = useState(null);
 
   const [workOrder, setWorkOrder] = useState({
     workOrderNumber: "",
     dueDate: "",
+    status: 0,
+    clientAdress: "",
     products: [],
   });
   const [messageApi, contextHolder] = message.useMessage();
   const handleProductNameChange = (e) => {
     setProductName(e.target.value);
   };
+  const handleAddressChange = (e) => {
+    const address = e.target.value;
+    setclientAddress(address);
+
+  // Update workOrder object
+  setWorkOrder((prevWorkOrder) => ({
+    ...prevWorkOrder,
+    clientAddress: address,
+  }));
+    setStatus(0);
+  };
+  
   const handleQuantityChange = (value) => {
     setValue(value);
   };
@@ -34,6 +51,7 @@ const Order = () => {
     const updatedWorkOrder = {
       ...workOrder,
       dueDate,
+      status,
     };
 
     try {
@@ -87,6 +105,7 @@ const Order = () => {
       setProductName("");
       setValue(1);
       setPrice(0);
+   
     }
   };
 
@@ -118,8 +137,8 @@ const Order = () => {
         />
         <Input
           placeholder="Enter Client Address"
-          value={productName}
-         
+          value={clientAddress}
+          onChange={handleAddressChange}
         />
       </div>
       <DatePicker
