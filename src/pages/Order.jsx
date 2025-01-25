@@ -2,7 +2,7 @@ import "../pages/Order.css";
 import React, { useState } from "react";
 import axios from "axios";
 import WorkOrderFeild from "../components/WorkOrderFeild";
-import { Button, InputNumber, DatePicker, Input } from "antd";
+import { Button, InputNumber, DatePicker, Input,message } from "antd";
 import ProductNameTable from "../components/ProductNameTable";
 
 const Order = () => {
@@ -17,6 +17,7 @@ const Order = () => {
     dueDate: "",
     products: [],
   });
+  const [messageApi, contextHolder] = message.useMessage();
   const handleProductNameChange = (e) => {
     setProductName(e.target.value);
   };
@@ -48,23 +49,17 @@ const Order = () => {
         }
       );
       console.log("Work order created successfully:", response.data);
-      alert("Work order created!");
+      messageApi.open({
+        type: 'success',
+        content: 'Work Order Created',
+      });
     } catch (error) {
       console.error("Error creating work order:", error);
-      
-      if (error.response) {
-        // Server responded with a status code other than 2xx
-        console.error("Response error:", error.response.data);
-        alert(`Error creating work order: ${error.response.data}`);
-      } else if (error.request) {
-        // No response received from server
-        console.error("No response:", error.request);
-        alert("Error creating work order: No response from server"+error.request);
-      } else {
-        // Something else went wrong
-        console.error("General error:", error.message);
-        alert(`Error creating work order: ${error.message}`);
-      }
+      messageApi.open({
+        type: 'error',
+        content: 'Something went wrong!! '+error.message,
+      });
+     
     }
   };
   const handleAddProduct = () => {
@@ -115,6 +110,7 @@ const Order = () => {
 
   return (
     <div className="parent">
+      {contextHolder}
       <WorkOrderFeild  workOrderNumber={workOrder.workOrderNumber}
   setWorkOrder={setWorkOrder}/>
       <DatePicker
