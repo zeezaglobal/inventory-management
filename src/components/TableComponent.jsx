@@ -4,35 +4,49 @@ import { Space, Table, Tag } from 'antd';
 const TableComponent = ({ handleGenerateJobCard }) => {
   const columns = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      title: 'Work Order',
+      dataIndex: 'workOrder',
+      key: 'workOrder',
       render: (text) => <a>{text}</a>,
     },
     {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
+      title: 'Due Date',
+      dataIndex: 'dueDate',
+      key: 'dueDate',
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
+      title: 'Client',
+      dataIndex: 'client',
+      key: 'client',
     },
     {
-      title: 'Tags',
-      key: 'tags',
-      dataIndex: 'tags',
-      render: (_, { tags }) => (
+      title: 'Status',
+      key: 'status',
+      dataIndex: 'status',
+      render: (_, { status }) => (
         <>
-          {tags.map((tag) => {
-            let color = tag.length > 5 ? 'geekblue' : 'green';
-            if (tag === 'loser') {
-              color = 'volcano';
+          {status.map((statusItem) => {
+            let color;
+            switch (statusItem) {
+              case 'pending':
+                color = 'gold';
+                break;
+              case 'processing':
+                color = 'blue';
+                break;
+              case 'cancelled':
+                color = 'red';
+                break;
+              case 'completed':
+                color = 'green';
+                break;
+              default:
+                color = 'default';
+                break;
             }
             return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
+              <Tag color={color} key={statusItem}>
+                {statusItem.toUpperCase()}
               </Tag>
             );
           })}
@@ -44,7 +58,9 @@ const TableComponent = ({ handleGenerateJobCard }) => {
       key: 'action',
       render: (_, record) => (
         <Space size="middle">
-          <a onClick={() => handleGenerateJobCard(record)}>Generate Job Card</a>
+          {record.status.includes('completed') ? null : (
+            <a onClick={() => handleGenerateJobCard(record)}>Generate Job Card</a>
+          )}
         </Space>
       ),
     },
@@ -53,24 +69,31 @@ const TableComponent = ({ handleGenerateJobCard }) => {
   const data = [
     {
       key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
+      workOrder: 'WO12345',
+      dueDate: '2025-01-30',
+      client: 'John Brown, New York No. 1 Lake Park',
+      status: ['pending'],
     },
     {
       key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
+      workOrder: 'WO12346',
+      dueDate: '2025-02-15',
+      client: 'Jim Green, London No. 1 Lake Park',
+      status: ['cancelled'],
     },
     {
       key: '3',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sydney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
+      workOrder: 'WO12347',
+      dueDate: '2025-02-10',
+      client: 'Joe Black, Sydney No. 1 Lake Park',
+      status: ['processing'],
+    },
+    {
+      key: '4',
+      workOrder: 'WO12348',
+      dueDate: '2025-02-05',
+      client: 'Jane Doe, Melbourne No. 2 Lake Park',
+      status: ['completed'],
     },
   ];
 

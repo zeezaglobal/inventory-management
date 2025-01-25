@@ -2,7 +2,7 @@ import "../pages/Order.css";
 import React, { useState } from "react";
 import axios from "axios";
 import WorkOrderFeild from "../components/WorkOrderFeild";
-import { Button, InputNumber, DatePicker, Input,message } from "antd";
+import { Button, InputNumber, DatePicker, Input, message } from "antd";
 import ProductNameTable from "../components/ProductNameTable";
 
 const Order = () => {
@@ -36,30 +36,28 @@ const Order = () => {
       dueDate,
     };
 
-   
     try {
       const response = await axios.post(
         "http://localhost:8080/api/workorders",
         updatedWorkOrder,
         {
           headers: {
-            'Content-Type': 'application/json', // Ensure the backend expects JSON
+            "Content-Type": "application/json", // Ensure the backend expects JSON
             // Add any other headers you might need (e.g., authentication tokens)
-          }
+          },
         }
       );
       console.log("Work order created successfully:", response.data);
       messageApi.open({
-        type: 'success',
-        content: 'Work Order Created',
+        type: "success",
+        content: "Work Order Created",
       });
     } catch (error) {
       console.error("Error creating work order:", error);
       messageApi.open({
-        type: 'error',
-        content: 'Something went wrong!! '+error.message,
+        type: "error",
+        content: "Something went wrong!! " + error.message,
       });
-     
     }
   };
   const handleAddProduct = () => {
@@ -100,7 +98,9 @@ const Order = () => {
     const productKey = parseInt(key);
     setWorkOrder((prevWorkOrder) => ({
       ...prevWorkOrder,
-      products: prevWorkOrder.products.filter((_, index) => index !== productKey)
+      products: prevWorkOrder.products.filter(
+        (_, index) => index !== productKey
+      ),
     }));
   };
 
@@ -111,8 +111,17 @@ const Order = () => {
   return (
     <div className="parent">
       {contextHolder}
-      <WorkOrderFeild  workOrderNumber={workOrder.workOrderNumber}
-  setWorkOrder={setWorkOrder}/>
+      <div className="firstline">
+        <WorkOrderFeild
+          workOrderNumber={workOrder.workOrderNumber}
+          setWorkOrder={setWorkOrder}
+        />
+        <Input
+          placeholder="Enter Client Address"
+          value={productName}
+         
+        />
+      </div>
       <DatePicker
         placeholder="Select Due Date"
         style={{ marginBottom: 12 }}
