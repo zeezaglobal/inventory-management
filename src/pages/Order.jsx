@@ -15,7 +15,7 @@ const Order = () => {
   const [workOrder, setWorkOrder] = useState({
     workOrderNumber: "",
     dueDate: "",
-    products: [{ name: "", price: "", quantity: "" }],
+    products: [],
   });
   const handleProductNameChange = (e) => {
     setProductName(e.target.value);
@@ -115,7 +115,8 @@ const Order = () => {
 
   return (
     <div className="parent">
-      <WorkOrderFeild />
+      <WorkOrderFeild  workOrderNumber={workOrder.workOrderNumber}
+  setWorkOrder={setWorkOrder}/>
       <DatePicker
         placeholder="Select Due Date"
         style={{ marginBottom: 12 }}
