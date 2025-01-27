@@ -13,7 +13,7 @@ export default function WorkOrderFeild({ workOrderNumber, setWorkOrder }) {
 
   return (
     <div>
-      <div style={{ marginRight: 12, marginBottom: 12 }}>
+      <div style={{ marginRight: 12}}>
         <Input
           addonBefore="WO#"
           placeholder="Work Order Number"

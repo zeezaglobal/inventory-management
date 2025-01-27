@@ -1,38 +1,67 @@
-import React from 'react';
-import { Space, Table, Tag } from 'antd';
+import React, { useState } from 'react';
+import { Space, Table, Tag, Modal } from 'antd';
 
-const TableComponent = ({ handleGenerateJobCard }) => {
+const TableComponent = ({ data, handleGenerateJobCard }) => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedProducts, setSelectedProducts] = useState([]);
+
+  const handleWorkOrderClick = (record) => {
+    setSelectedProducts(record.products || []); // Set the products for the selected work order
+    setIsModalVisible(true); // Show the modal
+  };
+
+  const handleModalClose = () => {
+    setIsModalVisible(false); // Close the modal
+    setSelectedProducts([]); // Clear the products
+  };
+
   const columns = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      render: (text) => <a>{text}</a>,
+      title: 'Work Order',
+      dataIndex: 'workOrder',
+      key: 'workOrder',
+      render: (text, record) => (
+        <a onClick={() => handleWorkOrderClick(record)}>{text}</a>
+      ),
     },
     {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
+      title: 'Due Date',
+      dataIndex: 'dueDate',
+      key: 'dueDate',
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
+      title: 'Client',
+      dataIndex: 'client',
+      key: 'client',
     },
     {
-      title: 'Tags',
-      key: 'tags',
-      dataIndex: 'tags',
-      render: (_, { tags }) => (
+      title: 'Status',
+      key: 'status',
+      dataIndex: 'status',
+      render: (_, { status }) => (
         <>
-          {tags.map((tag) => {
-            let color = tag.length > 5 ? 'geekblue' : 'green';
-            if (tag === 'loser') {
-              color = 'volcano';
+          {status.map((statusItem) => {
+            let color;
+            switch (statusItem) {
+              case 'pending':
+                color = 'gold';
+                break;
+              case 'processing':
+                color = 'blue';
+                break;
+              case 'cancelled':
+                color = 'red';
+                break;
+              case 'completed':
+                color = 'green';
+                break;
+              default:
+                color = 'default';
+                break;
             }
             return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
+              <Tag color={color} key={statusItem}>
+                {statusItem.toUpperCase()}
               </Tag>
             );
           })}
@@ -44,37 +73,57 @@ const TableComponent = ({ handleGenerateJobCard }) => {
       key: 'action',
       render: (_, record) => (
         <Space size="middle">
-          <a onClick={() => handleGenerateJobCard(record)}>Generate Job Card</a>
+          {record.status.includes('completed') ? null : (
+            <a onClick={() => handleGenerateJobCard(record)}>Generate Job Card</a>
+          )}
         </Space>
       ),
     },
   ];
 
-  const data = [
+  const productColumns = [
     {
-      key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
+      title: 'Product Name',
+      dataIndex: 'name',
+      key: 'name',
     },
     {
-      key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
+      title: 'Quantity',
+      dataIndex: 'quantity',
+      key: 'quantity',
     },
     {
-      key: '3',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sydney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
+      title: 'Price',
+      dataIndex: 'price',
+      key: 'price',
+      render: (price) => `$${price.toFixed(2)}`,
     },
   ];
 
-  return <Table columns={columns} dataSource={data} />;
+  return (
+    <>
+      <Table columns={columns} dataSource={data} />
+
+      {/* Modal for displaying products */}
+      <Modal
+        title="Products in Work Order"
+        visible={isModalVisible}
+        onCancel={handleModalClose}
+        onOk={handleModalClose}
+      >
+        {selectedProducts.length > 0 ? (
+          <Table
+            columns={productColumns}
+            dataSource={selectedProducts}
+            pagination={false}
+            rowKey="id" // Ensure each product has a unique `id` or similar key
+          />
+        ) : (
+          <p>No products found for this work order.</p>
+        )}
+      </Modal>
+    </>
+  );
 };
 
 export default TableComponent;

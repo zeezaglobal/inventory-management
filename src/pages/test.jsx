@@ -1,115 +1,167 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import "../pages/Order.css";
+import React, { useState } from "react";
+import axios from "axios";
+import WorkOrderFeild from "../components/WorkOrderFeild";
+import { Button, InputNumber, DatePicker, Input, message } from "antd";
+import ProductNameTable from "../components/ProductNameTable";
 
-const WorkOrderForm = () => {
+const Order = () => {
+  const [tableData, setTableData] = useState([]);
+  const [pricev, setPrice] = useState(0);
+  const [productName, setProductName] = useState("");
+  const [value, setValue] = useState(1);
+  const [dueDate, setDueDate] = useState(null);
+
   const [workOrder, setWorkOrder] = useState({
-    workOrderNumber: '',
-    dueDate: '',
-    products: [
-      { name: '', price: '', quantity: '' }
-    ]
+    workOrderNumber: "",
+    dueDate: "",
+    products: [],
   });
 
-  const handleWorkOrderChange = (e) => {
-    const { name, value } = e.target;
-    setWorkOrder({
-      ...workOrder,
-      [name]: value
-    });
-  };
+  const [messageApi, contextHolder] = message.useMessage();
 
-  const handleProductChange = (index, e) => {
-    const { name, value } = e.target;
-    const updatedProducts = [...workOrder.products];
-    updatedProducts[index][name] = value;
-    setWorkOrder({
-      ...workOrder,
-      products: updatedProducts
-    });
+  const handleProductNameChange = (e) => {
+    setProductName(e.target.value);
   };
-
-  const handleAddProduct = () => {
-    setWorkOrder({
-      ...workOrder,
-      products: [...workOrder.products, { name: '', price: '', quantity: '' }]
-    });
+  const handleQuantityChange = (value) => {
+    setValue(value);
+  };
+  const handlePriceChange = (value) => {
+    setPrice(value);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const updatedWorkOrder = {
+      ...workOrder,
+      dueDate,
+    };
+
     try {
-      const response = await axios.post('http://localhost:8080/api/workorders', workOrder);
-      console.log('Work order created successfully:', response.data);
-      alert('Work order created!');
+      const response = await axios.post(
+        "http://localhost:8080/api/workorders",
+        updatedWorkOrder,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }
+      );
+      console.log("Work order created successfully:", response.data);
+      message.success("Work order created!");
     } catch (error) {
-      console.error('Error creating work order:', error);
-      alert('Error creating work order');
+      console.error("Error creating work order:", error);
+
+      if (error.response) {
+        console.error("Response error:", error.response.data);
+        message.error(`Error creating work order: ${error.response.data}`);
+      } else if (error.request) {
+        console.error("No response:", error.request);
+        message.error("Error creating work order: No response from server");
+      } else {
+        console.error("General error:", error.message);
+        message.error(`Error creating work order: ${error.message}`);
+      }
     }
   };
 
+  const handleAddProduct = () => {
+    if (productName.trim() && value > 0 && pricev > 0) {
+      const newProduct = {
+        name: productName,
+        quantity: value,
+        price: pricev,
+      };
+
+      setWorkOrder((prevWorkOrder) => ({
+        ...prevWorkOrder,
+        products: [...prevWorkOrder.products, newProduct],
+      }));
+
+      const newRow = {
+        key: tableData.length.toString(),
+        name: productName,
+        quantity: value.toString(),
+        price: `${pricev} AED`,
+      };
+      setTableData([...tableData, newRow]);
+
+      setProductName("");
+      setValue(1);
+      setPrice(0);
+    } else {
+      message.error("Please fill out product details correctly.");
+    }
+  };
+
+  const handleDeleteProduct = (key) => {
+    const updatedTableData = tableData.filter((item) => item.key !== key);
+    setTableData(updatedTableData);
+
+    const productKey = parseInt(key);
+    setWorkOrder((prevWorkOrder) => ({
+      ...prevWorkOrder,
+      products: prevWorkOrder.products.filter((_, index) => index !== productKey)
+    }));
+    message.success("Product deleted successfully.");
+  };
+
+  const handleDueDateChange = (date, dateString) => {
+    setDueDate(dateString);
+  };
+
   return (
-    <div>
-      <h2>Create Work Order</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Work Order Number:</label>
-          <input
-            type="text"
-            name="workOrderNumber"
-            value={workOrder.workOrderNumber}
-            onChange={handleWorkOrderChange}
-          />
-        </div>
-        <div>
-          <label>Due Date:</label>
-          <input
-            type="date"
-            name="dueDate"
-            value={workOrder.dueDate}
-            onChange={handleWorkOrderChange}
-          />
-        </div>
+    <div className="parent">
+      {contextHolder}
+      <WorkOrderFeild workOrderNumber={workOrder.workOrderNumber} setWorkOrder={setWorkOrder} />
+      <DatePicker
+        placeholder="Select Due Date"
+        style={{ marginBottom: 12 }}
+        onChange={handleDueDateChange}
+      />
 
-        <h3>Products</h3>
-        {workOrder.products.map((product, index) => (
-          <div key={index}>
-            <div>
-              <label>Product Name:</label>
-              <input
-                type="text"
-                name="name"
-                value={product.name}
-                onChange={(e) => handleProductChange(index, e)}
-              />
-            </div>
-            <div>
-              <label>Price:</label>
-              <input
-                type="number"
-                name="price"
-                value={product.price}
-                onChange={(e) => handleProductChange(index, e)}
-              />
-            </div>
-            <div>
-              <label>Quantity:</label>
-              <input
-                type="number"
-                name="quantity"
-                value={product.quantity}
-                onChange={(e) => handleProductChange(index, e)}
-              />
-            </div>
-          </div>
-        ))}
+      <div className="firstline">
+        <Input
+          placeholder="Enter Product Name"
+          value={productName}
+          style={{ width: 200 }}
+          onChange={handleProductNameChange}
+        />
+        <InputNumber
+          style={{ marginLeft: 12 }}
+          min={1}
+          max={50}
+          value={value}
+          onChange={handleQuantityChange}
+        />
+        <InputNumber
+          defaultValue={0}
+          style={{ marginLeft: 12 }}
+          value={pricev}
+          onChange={handlePriceChange}
+          formatter={(value) =>
+            `AED ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+          }
+          parser={(value) => value?.replace(/AED\s?|(,*)/g, "")}
+        />
+        <Button
+          type="primary"
+          className="editable-add-btn"
+          style={{ width: 100, marginLeft: 12 }}
+          onClick={handleAddProduct}
+        >
+          Add
+        </Button>
+      </div>
 
-        <button type="button" onClick={handleAddProduct}>Add Another Product</button>
-        <div>
-          <button type="submit">Submit Work Order</button>
-        </div>
-      </form>
+      <ProductNameTable dataSource={tableData} onDelete={handleDeleteProduct} />
+
+      <Button type="primary" style={{ marginTop: 12 }} onClick={handleSubmit}>
+        Submit Work Order
+      </Button>
     </div>
   );
 };
 
-export default WorkOrderForm;
+export default Order;

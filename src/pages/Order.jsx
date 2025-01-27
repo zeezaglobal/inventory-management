@@ -2,24 +2,42 @@ import "../pages/Order.css";
 import React, { useState } from "react";
 import axios from "axios";
 import WorkOrderFeild from "../components/WorkOrderFeild";
-import { Button, InputNumber, DatePicker, Input } from "antd";
+import { Button, InputNumber, DatePicker, Input, message } from "antd";
 import ProductNameTable from "../components/ProductNameTable";
 
 const Order = () => {
   const [tableData, setTableData] = useState([]);
   const [pricev, setPrice] = useState(0);
   const [productName, setProductName] = useState("");
+  const [clientAddress, setclientAddress] = useState("");
+
   const [value, setValue] = useState(1);
+  const [status, setStatus] = useState(1);
   const [dueDate, setDueDate] = useState(null);
 
   const [workOrder, setWorkOrder] = useState({
     workOrderNumber: "",
     dueDate: "",
+    status: 0,
+    clientAdress: "",
     products: [],
   });
+  const [messageApi, contextHolder] = message.useMessage();
   const handleProductNameChange = (e) => {
     setProductName(e.target.value);
   };
+  const handleAddressChange = (e) => {
+    const address = e.target.value;
+    setclientAddress(address);
+
+  // Update workOrder object
+  setWorkOrder((prevWorkOrder) => ({
+    ...prevWorkOrder,
+    clientAddress: address,
+  }));
+    setStatus(0);
+  };
+  
   const handleQuantityChange = (value) => {
     setValue(value);
   };
@@ -33,38 +51,31 @@ const Order = () => {
     const updatedWorkOrder = {
       ...workOrder,
       dueDate,
+      status,
     };
 
-   
     try {
       const response = await axios.post(
         "http://localhost:8080/api/workorders",
         updatedWorkOrder,
         {
           headers: {
-            'Content-Type': 'application/json', // Ensure the backend expects JSON
+            "Content-Type": "application/json", // Ensure the backend expects JSON
             // Add any other headers you might need (e.g., authentication tokens)
-          }
+          },
         }
       );
       console.log("Work order created successfully:", response.data);
-      alert("Work order created!");
+      messageApi.open({
+        type: "success",
+        content: "Work Order Created",
+      });
     } catch (error) {
       console.error("Error creating work order:", error);
-      
-      if (error.response) {
-        // Server responded with a status code other than 2xx
-        console.error("Response error:", error.response.data);
-        alert(`Error creating work order: ${error.response.data}`);
-      } else if (error.request) {
-        // No response received from server
-        console.error("No response:", error.request);
-        alert("Error creating work order: No response from server"+error.request);
-      } else {
-        // Something else went wrong
-        console.error("General error:", error.message);
-        alert(`Error creating work order: ${error.message}`);
-      }
+      messageApi.open({
+        type: "error",
+        content: "Something went wrong!! " + error.message,
+      });
     }
   };
   const handleAddProduct = () => {
@@ -94,6 +105,7 @@ const Order = () => {
       setProductName("");
       setValue(1);
       setPrice(0);
+   
     }
   };
 
@@ -105,7 +117,9 @@ const Order = () => {
     const productKey = parseInt(key);
     setWorkOrder((prevWorkOrder) => ({
       ...prevWorkOrder,
-      products: prevWorkOrder.products.filter((_, index) => index !== productKey)
+      products: prevWorkOrder.products.filter(
+        (_, index) => index !== productKey
+      ),
     }));
   };
 
@@ -115,8 +129,18 @@ const Order = () => {
 
   return (
     <div className="parent">
-      <WorkOrderFeild  workOrderNumber={workOrder.workOrderNumber}
-  setWorkOrder={setWorkOrder}/>
+      {contextHolder}
+      <div className="firstline">
+        <WorkOrderFeild
+          workOrderNumber={workOrder.workOrderNumber}
+          setWorkOrder={setWorkOrder}
+        />
+        <Input
+          placeholder="Enter Client Address"
+          value={clientAddress}
+          onChange={handleAddressChange}
+        />
+      </div>
       <DatePicker
         placeholder="Select Due Date"
         style={{ marginBottom: 12 }}
