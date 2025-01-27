@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Space, Table, Tag, Modal } from 'antd';
+import { Space, Table, Tag, Modal,Button } from 'antd';
 
 const TableComponent = ({ data, handleGenerateJobCard }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -110,6 +110,13 @@ const TableComponent = ({ data, handleGenerateJobCard }) => {
         visible={isModalVisible}
         onCancel={handleModalClose}
         onOk={handleModalClose}
+        footer={(_, { OkBtn, CancelBtn }) => (
+          <>
+            <Button>Edit Status</Button>
+            <CancelBtn />
+            <OkBtn />
+          </>
+        )}
       >
         {selectedProducts.length > 0 ? (
           <Table
