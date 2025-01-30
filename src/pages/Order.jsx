@@ -56,7 +56,7 @@ const Order = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/workorders",
+        "http://147.93.114.66:8080/api/workorders",
         updatedWorkOrder,
         {
           headers: {

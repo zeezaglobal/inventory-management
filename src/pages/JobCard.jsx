@@ -34,7 +34,7 @@ const JobCard = () => {
   useEffect(() => {
     const fetchWorkOrders = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/workorders");
+        const response = await axios.get("http://147.93.114.66:8080/api/workorders");
         // Transform the response data
         const formattedData = response.data.map((item) => ({
           key: item.id, // Use 'id' as the key
