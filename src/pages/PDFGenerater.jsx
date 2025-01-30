@@ -65,9 +65,9 @@ const PDFGenerater = () => {
     doc.text("Description", 50, tableStartY + 7);
     doc.text("Unit", 100, tableStartY + 7);
     doc.text("Qty", 140, tableStartY + 7);
-    doc.text("Completed Qty", 180, tableStartY + 7);
-    doc.text("Duration (Hrs)", 210, tableStartY + 7);
-    doc.text("Remarks", 240, tableStartY + 7);
+    doc.text("Completed Qty", 165, tableStartY + 7);
+    doc.text("Duration (Hrs)", 195, tableStartY + 7);
+    doc.text("Remarks", 230, tableStartY + 7);
 
     // Adjust the starting Y position for the rows
     const rowsStartY = tableStartY + headerHeight + headerMargin;
@@ -76,12 +76,12 @@ const PDFGenerater = () => {
     jobData.products.forEach((product, index) => {
       const rowY = rowsStartY + index * rowHeight;
       doc.text(`${index + 1}`, 22, rowY - 3);
-      doc.text(product.name || "N/A", 50, rowY - 3);
-      doc.text(product.unit || "N/A", 100, rowY - 3);
+      doc.text(product.name || "N/A", 40, rowY - 3);
+      doc.text(product.unit || "", 100, rowY - 3);
       doc.text(product.quantity?.toString() || "N/A", 140, rowY - 3);
-      doc.text(product.completedQty?.toString() || "N/A", 180, rowY - 3);
-      doc.text(product.durationHrs?.toString() || "N/A", 210, rowY - 3);
-      doc.text(product.remarks || "N/A", 240, rowY - 3);
+      doc.text(product.completedQty?.toString() || "", 180, rowY - 3);
+      doc.text(product.durationHrs?.toString() || "", 210, rowY - 3);
+      doc.text(product.remarks || "", 240, rowY - 3);
     });
 
     // Footer details
