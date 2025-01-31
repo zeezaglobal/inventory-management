@@ -14,7 +14,7 @@ const Order = () => {
   const [value, setValue] = useState(1);
   const [status, setStatus] = useState(1);
   const [dueDate, setDueDate] = useState(null);
-
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const [workOrder, setWorkOrder] = useState({
     workOrderNumber: "",
     dueDate: "",
@@ -57,7 +57,7 @@ const Order = () => {
 
     try {
       const response = await axios.post(
-        "http://147.93.114.66:8080/api/workorders",
+        `${API_BASE_URL}/workorders`,
         updatedWorkOrder,
         {
           headers: {
