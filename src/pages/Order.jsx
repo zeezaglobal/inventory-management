@@ -2,7 +2,7 @@ import "../pages/Order.css";
 import React, { useState } from "react";
 import axios from "axios";
 import WorkOrderFeild from "../components/WorkOrderFeild";
-import { Button, InputNumber, DatePicker, Input, message } from "antd";
+import { Button, InputNumber, DatePicker, Input, message, Radio } from "antd";
 import ProductNameTable from "../components/ProductNameTable";
 
 const Order = () => {
@@ -30,20 +30,21 @@ const Order = () => {
     const address = e.target.value;
     setclientAddress(address);
 
-  // Update workOrder object
-  setWorkOrder((prevWorkOrder) => ({
-    ...prevWorkOrder,
-    clientAddress: address,
-  }));
+    // Update workOrder object
+    setWorkOrder((prevWorkOrder) => ({
+      ...prevWorkOrder,
+      clientAddress: address,
+    }));
     setStatus(0);
   };
-  
+
   const handleQuantityChange = (value) => {
     setValue(value);
   };
-  const handlePriceChange = (value) => {
-    setPrice(value);
+  const handlePriceChange = (e) => {
+    setPrice(e.target.value);
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -105,7 +106,6 @@ const Order = () => {
       setProductName("");
       setValue(1);
       setPrice(0);
-   
     }
   };
 
@@ -136,22 +136,28 @@ const Order = () => {
           setWorkOrder={setWorkOrder}
         />
         <Input
-          placeholder="Enter Client Address"
+          placeholder="Customer Name"
           value={clientAddress}
           onChange={handleAddressChange}
         />
       </div>
+      <div className="firstline">
       <DatePicker
         placeholder="Select Due Date"
-        style={{ marginBottom: 12 }}
+        style={{ width: 200 ,marginRight:12}}
         onChange={handleDueDateChange}
       />
-
+        <DatePicker
+        placeholder="Select Received Date"
+        style={{ width: 200 }}
+        onChange={handleDueDateChange}
+      />
+    </div>
       <div className="firstline">
         <Input
           placeholder="Enter Product Name"
           value={productName}
-          style={{ width: 200 }}
+          style={{ width: 500 }}
           onChange={handleProductNameChange}
         />
         <InputNumber
@@ -161,16 +167,16 @@ const Order = () => {
           value={value}
           onChange={handleQuantityChange}
         />
-        <InputNumber
-          defaultValue={0}
-          style={{ marginLeft: 12 }}
+        <Radio.Group
           value={pricev}
           onChange={handlePriceChange}
-          formatter={(value) =>
-            `AED ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-          }
-          parser={(value) => value?.replace(/AED\s?|(,*)/g, "")}
-        />
+          optionType="button"
+          buttonStyle="solid"
+          style={{ marginLeft: 12 }}
+        >
+          <Radio value="pair">Pair</Radio>
+          <Radio value="unit">Unit</Radio>
+        </Radio.Group>
         <Button
           type="primary"
           className="editable-add-btn"
