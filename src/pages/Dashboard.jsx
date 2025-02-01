@@ -4,10 +4,10 @@ import { Layout } from "antd";
 
 // Importing components for each section
 import Production from "./Order"; // Create this component
-import Settings from "./Settings";     // Create this component
-import Support from "./Support";   
-import JobCard from "./JobCard";       // Create this component
-
+import Settings from "./Settings"; // Create this component
+import Support from "./Support";
+import WorkOrders from "./WorkOrders"; // Create this component
+import JobCards from "./JobCards"; 
 // Import TopNav and SideNav components
 import TopNav from "../components/TopNav";
 import SideNav from "../components/SideNav";
@@ -24,8 +24,10 @@ const Dashboard = () => {
     switch (selectedSection) {
       case "Order":
         return <Order />;
-        case "Jobcard":
-          return <JobCard />;
+      case "Wordorders":
+        return <WorkOrders />;
+      case "Jobcards":
+        return <JobCards />;
       case "settings":
         return <Settings />;
       case "support":
@@ -54,7 +56,10 @@ const Dashboard = () => {
 
       <Layout>
         {/* Sidebar Navigation */}
-        <SideNav selectedSection={selectedSection} handleMenuClick={handleMenuClick} />
+        <SideNav
+          selectedSection={selectedSection}
+          handleMenuClick={handleMenuClick}
+        />
 
         {/* Main Content */}
         <Layout style={{ padding: "0 24px 24px" }}>

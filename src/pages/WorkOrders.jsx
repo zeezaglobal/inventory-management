@@ -3,11 +3,11 @@ import Table from "../components/TableComponent";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const JobCard = () => {
+const WorkOrders = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const handleGenerateJobCard = (record) => {
     console.log("Generating Job Card for:", record);
     navigate("/pdf-generator", { state: { jobData: record } });
@@ -34,7 +34,7 @@ const JobCard = () => {
   useEffect(() => {
     const fetchWorkOrders = async () => {
       try {
-        const response = await axios.get("http://147.93.114.66:8080/api/workorders");
+        const response = await axios.get( `${API_BASE_URL}/workorders`);
         // Transform the response data
         const formattedData = response.data.map((item) => ({
           key: item.id, // Use 'id' as the key
@@ -66,4 +66,4 @@ const JobCard = () => {
   );
 };
 
-export default JobCard;
+export default WorkOrders;
