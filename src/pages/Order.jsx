@@ -1,23 +1,29 @@
 import "../pages/Order.css";
 import React, { useState } from "react";
 import axios from "axios";
-import WorkOrderFeild from "../components/WorkOrderFeild";
+
 import { Button, InputNumber, DatePicker, Input, message, Radio } from "antd";
 import ProductNameTable from "../components/ProductNameTable";
 
 const Order = () => {
-  const [tableData, setTableData] = useState([]);
-  const [pricev, setPrice] = useState(0);
-  const [productName, setProductName] = useState("");
-  const [clientAddress, setclientAddress] = useState("");
 
-  const [value, setValue] = useState(1);
-  const [status, setStatus] = useState(1);
+  const [workOrderNumber, setworkOrderNumber] = useState("");
+  const [clientAddress, setclientAddress] = useState("");
   const [dueDate, setDueDate] = useState(null);
+  const [receivedDate, setreceivedDate] = useState(null);
+  const [status, setStatus] = useState(0);
+
+  const [tableData, setTableData] = useState([]);
+  const [type, setType] = useState("");
+  const [productName, setProductName] = useState("");
+  const [value, setValue] = useState(1);
+  const [products, setProducts] = useState([]);
+ 
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const [workOrder, setWorkOrder] = useState({
     workOrderNumber: "",
     dueDate: "",
+    receivedDate: "",
     status: 0,
     clientAdress: "",
     products: [],
@@ -26,35 +32,33 @@ const Order = () => {
   const handleProductNameChange = (e) => {
     setProductName(e.target.value);
   };
+  const handleTypeChange = (e) => {
+    setType(e.target.value);
+  };
   const handleAddressChange = (e) => {
     const address = e.target.value;
     setclientAddress(address);
 
-    // Update workOrder object
-    setWorkOrder((prevWorkOrder) => ({
-      ...prevWorkOrder,
-      clientAddress: address,
-    }));
-    setStatus(0);
   };
 
   const handleQuantityChange = (value) => {
     setValue(value);
   };
-  const handlePriceChange = (e) => {
-    setPrice(e.target.value);
-  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Ensure due date and work order number are part of the work order
     const updatedWorkOrder = {
-      ...workOrder,
+      workOrderNumber,
+      clientAddress,
+      receivedDate,
       dueDate,
       status,
+      products
     };
-
+    console.log('Updated Work Order:', JSON.stringify(updatedWorkOrder, null, 2));
     try {
       const response = await axios.post(
         `${API_BASE_URL}/workorders`,
@@ -80,32 +84,29 @@ const Order = () => {
     }
   };
   const handleAddProduct = () => {
-    if (productName.trim() && value > 0 && pricev > 0) {
+    if (productName.trim() && value > 0 ) {
       // Add product to work order
       const newProduct = {
         name: productName,
         quantity: value,
-        price: pricev,
+        type: type,
       };
 
-      setWorkOrder((prevWorkOrder) => ({
-        ...prevWorkOrder,
-        products: [...prevWorkOrder.products, newProduct],
-      }));
+      setProducts([...products, newProduct]);
 
       // Update the table
       const newRow = {
         key: tableData.length.toString(),
         name: productName,
         quantity: value.toString(),
-        price: `${pricev} AED`,
+        type: type.toString(),
       };
       setTableData([...tableData, newRow]);
 
       // Clear input fields
       setProductName("");
       setValue(1);
-      setPrice(0);
+      
     }
   };
 
@@ -126,14 +127,20 @@ const Order = () => {
   const handleDueDateChange = (date, dateString) => {
     setDueDate(dateString);
   };
-
+  const handleReceivedDateChange = (date, dateString) => {
+    setreceivedDate(dateString);
+  };
+  
   return (
     <div className="parent">
       {contextHolder}
       <div className="firstline">
-        <WorkOrderFeild
-          workOrderNumber={workOrder.workOrderNumber}
-          setWorkOrder={setWorkOrder}
+      <Input
+          addonBefore="WO#"
+          placeholder="Work Order Number"
+          value={workOrderNumber} // Controlled input
+  onChange={(e) => setworkOrderNumber(e.target.value)} 
+        
         />
         <Input
           placeholder="Customer Name"
@@ -150,7 +157,7 @@ const Order = () => {
         <DatePicker
         placeholder="Select Received Date"
         style={{ width: 200 }}
-        onChange={handleDueDateChange}
+        onChange={handleReceivedDateChange}
       />
     </div>
       <div className="firstline">
@@ -168,14 +175,14 @@ const Order = () => {
           onChange={handleQuantityChange}
         />
         <Radio.Group
-          value={pricev}
-          onChange={handlePriceChange}
+          value={type}
+          onChange={handleTypeChange}
           optionType="button"
           buttonStyle="solid"
           style={{ marginLeft: 12 }}
         >
-          <Radio value="pair">Pair</Radio>
-          <Radio value="unit">Unit</Radio>
+          <Radio value="Pair">Pair</Radio>
+          <Radio value="Unit">Unit</Radio>
         </Radio.Group>
         <Button
           type="primary"
