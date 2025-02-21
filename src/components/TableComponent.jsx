@@ -1,19 +1,22 @@
 import React, { useState } from "react";
-import { Table, Tag, Modal } from "antd";
+import { Table, Tag } from "antd";
 import ProductsModal from "../components/ProductsModal"; 
 
 const TableComponent = ({ data }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState([]);
+  const [workOrderId, setWorkOrderId] = useState(null); // Store work order ID
 
   const handleWorkOrderClick = (record) => {
     setSelectedProducts(record.products || []);
+    setWorkOrderId(record.key); // Store work order ID
     setIsModalVisible(true);
   };
 
   const handleModalClose = () => {
     setIsModalVisible(false);
     setSelectedProducts([]);
+    setWorkOrderId(null); // Reset work order ID
   };
 
   const columns = [
@@ -59,30 +62,16 @@ const TableComponent = ({ data }) => {
     },
   ];
 
-  const productColumns = [
-    {
-      title: "Product Name",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Quantity",
-      dataIndex: "quantity",
-      key: "quantity",
-    },
-    {
-      title: "Type",
-      dataIndex: "type",
-      key: "type",
-     
-    },
-  ];
-
   return (
     <>
-    <Table columns={columns} dataSource={data} />
-    <ProductsModal isVisible={isModalVisible} onClose={handleModalClose} products={selectedProducts} />
-  </>
+      <Table columns={columns} dataSource={data} />
+      <ProductsModal 
+        isVisible={isModalVisible} 
+        onClose={handleModalClose} 
+        products={selectedProducts} 
+        workOrderId={workOrderId} // Pass workOrderId to modal
+      />
+    </>
   );
 };
 
