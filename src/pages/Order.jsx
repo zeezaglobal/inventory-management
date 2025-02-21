@@ -2,7 +2,7 @@ import "../pages/Order.css";
 import React, { useState } from "react";
 import axios from "axios";
 
-import { Button, InputNumber, DatePicker, Input, message, Radio } from "antd";
+import { Button, InputNumber, DatePicker, Input, message, Select } from "antd";
 import ProductNameTable from "../components/ProductNameTable";
 
 const Order = () => {
@@ -137,27 +137,29 @@ const Order = () => {
         <Input
           addonBefore="WO#"
           placeholder="Work Order Number"
+          style={{  marginRight: 12 }}
           value={workOrderNumber} // Controlled input
           onChange={(e) => setworkOrderNumber(e.target.value)}
         />
-        <Input
-         style={{marginLeft: 12 }}
-          placeholder="Customer Name"
-          value={clientAddress}
-          onChange={handleAddressChange}
-        />
-      </div>
-      <div className="firstline">
-        <DatePicker
+       <DatePicker
           placeholder="Select Due Date"
-          style={{ width: 200, marginRight: 12 }}
+          style={{ width: 300, marginRight: 12 }}
           onChange={handleDueDateChange}
         />
         <DatePicker
           placeholder="Select Received Date"
-          style={{ width: 200 }}
+          style={{ width: 300 }}
           onChange={handleReceivedDateChange}
         />
+      </div>
+      <div className="firstline">
+      <Input
+         style={{ }}
+          placeholder="Customer Name"
+          value={clientAddress}
+          onChange={handleAddressChange}
+        />
+       
       </div>
       <div className="firstline">
         <Input
@@ -169,20 +171,20 @@ const Order = () => {
         <InputNumber
           style={{ marginLeft: 12 }}
           min={1}
-          max={50}
+          max={5000}
           value={value}
           onChange={handleQuantityChange}
         />
-        <Radio.Group
+        <Select
+          style={{ marginLeft: 12, width: 120 }}
           value={type}
-          onChange={handleTypeChange}
-          optionType="button"
-          buttonStyle="solid"
-          style={{ marginLeft: 12 }}
+          onChange={setType}
+          placeholder="Select Type"
         >
-          <Radio value="Pair">Pair</Radio>
-          <Radio value="Unit">Unit</Radio>
-        </Radio.Group>
+          <Select.Option value="Nos">Nos</Select.Option>
+          <Select.Option value="Pair">Pair</Select.Option>
+          <Select.Option value="Set">Set</Select.Option>
+        </Select>
         <Button
           type="primary"
           className="editable-add-btn"
