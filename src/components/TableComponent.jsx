@@ -19,6 +19,12 @@ const TableComponent = ({ data }) => {
     setWorkOrderId(null); // Reset work order ID
   };
 
+  // Sort data by closest due date (optional)
+  // const sortedData = data.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+
+  // Reverse the data
+  const reversedData = data.slice().reverse();
+
   const columns = [
     {
       title: "Work Order",
@@ -64,7 +70,7 @@ const TableComponent = ({ data }) => {
 
   return (
     <>
-      <Table columns={columns} dataSource={data} />
+      <Table columns={columns} dataSource={reversedData} /> {/* Use reversed data */}
       <ProductsModal 
         isVisible={isModalVisible} 
         onClose={handleModalClose} 

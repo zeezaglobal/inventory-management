@@ -98,7 +98,7 @@ const JobCards = () => {
   return (
     <div>
       <h2>Job Card Section</h2>
-      <Table dataSource={jobCards} columns={columns} loading={loading} rowKey="id" />
+      <Table  dataSource={jobCards.slice().reverse()}  columns={columns} loading={loading} rowKey="id" />
 
       <Modal
         title={`Products for Job Card: ${selectedJobCard?.jobCardNumber}`}

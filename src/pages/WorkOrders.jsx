@@ -40,6 +40,7 @@ const WorkOrders = () => {
           key: item.id, // Use 'id' as the key
           workOrder: item.workOrderNumber, // Use 'workOrderNumber'
           dueDate: item.dueDate, // Use 'dueDate'
+         createdAt:item.createdAt,
           client: item.clientAddress, // Use 'clientAddress'
           status: [mapStatus(parseInt(item.status, 10))], // Convert status code to label
           products: item.workOrderProducts.map((productItem) => ({
@@ -47,6 +48,7 @@ const WorkOrders = () => {
             name: productItem.product.name,
             type: productItem.product.type,
             quantity: productItem.quantity,
+            status: productItem.status,
           })),
         }));
   

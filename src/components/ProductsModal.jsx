@@ -2,12 +2,11 @@ import React, { useState } from "react";
 import axios from "axios"; // Import axios
 import { Modal, Table, Checkbox, Button, message } from "antd";
 
-// Replace with your actual API URL
-
 const ProductsModal = ({ isVisible, onClose, products, workOrderId }) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [loading, setLoading] = useState(false); // Add loading state
+  const [loading, setLoading] = useState(false);
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+  const [messageApi, contextHolder] = message.useMessage();
   const onSelectChange = (selectedKeys) => {
     setSelectedRowKeys(selectedKeys);
   };
@@ -17,20 +16,29 @@ const ProductsModal = ({ isVisible, onClose, products, workOrderId }) => {
 
     const payload = {
       workOrderId: workOrderId,
-      productIds: selectedRowKeys, // Send selected product IDs
+      productIds: selectedRowKeys,
+     
     };
-
+    console.log("Generated Payload:", JSON.stringify(payload, null, 2));
     try {
-      setLoading(true); // Start loading
+      setLoading(true);
+     
       const response = await axios.post(`${API_BASE_URL}/jobcards`, payload);
-      message.success("Job Card generated successfully!"); // Success message
+      messageApi.open({
+        type: "success",
+        content: "Job card Created",
+      });
       console.log("API Response:", response.data);
-      onClose(); // Close the modal after success
+      onClose();
     } catch (error) {
       console.error("Error generating job card:", error);
-      message.error("Failed to generate job card. Please try again."); // Error message
+     
+      messageApi.open({
+        type: "error",
+        content: "Something went wrong!! " + error.message,
+      });
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
@@ -40,14 +48,23 @@ const ProductsModal = ({ isVisible, onClose, products, workOrderId }) => {
       key: "select",
       render: (_, record) => (
         <Checkbox
-          checked={selectedRowKeys.includes(record.id)}
-          onChange={() => {
-            const newSelectedRowKeys = selectedRowKeys.includes(record.id)
-              ? selectedRowKeys.filter((key) => key !== record.id)
-              : [...selectedRowKeys, record.id];
-            setSelectedRowKeys(newSelectedRowKeys);
-          }}
-        />
+        checked={selectedRowKeys.some((item) => item.id === record.id)}
+        onChange={() => {
+          const existingItem = selectedRowKeys.find((item) => item.id === record.id);
+    
+          if (record.status !== 1) { // Only allow updates if status is not 1
+            if (existingItem) {
+              // If the item is already selected, we remove it from selectedRowKeys
+              const newSelectedRowKeys = selectedRowKeys.filter((item) => item.id !== record.id);
+              setSelectedRowKeys(newSelectedRowKeys);
+            } else {
+              // Add the new item without changing the quantity
+              setSelectedRowKeys([...selectedRowKeys, { id: record.id, quantity: record.quantity }]);
+            }
+          }
+        }}
+        disabled={record.status === 1} // Disable checkbox if status is 1
+      />
       ),
     },
     {
@@ -66,8 +83,10 @@ const ProductsModal = ({ isVisible, onClose, products, workOrderId }) => {
       key: "type",
     },
   ];
-
+  
   return (
+    <div className="parent">
+      {contextHolder}
     <Modal
       title="Products in Work Order"
       visible={isVisible}
@@ -81,7 +100,7 @@ const ProductsModal = ({ isVisible, onClose, products, workOrderId }) => {
           type="primary"
           onClick={handleGenerateJobCard}
           disabled={selectedRowKeys.length === 0}
-          loading={loading} // Show loading state
+          loading={loading}
         >
           Generate Job Card
         </Button>,
@@ -98,6 +117,7 @@ const ProductsModal = ({ isVisible, onClose, products, workOrderId }) => {
         <p>No products found for this work order.</p>
       )}
     </Modal>
+    </div>
   );
 };
 
