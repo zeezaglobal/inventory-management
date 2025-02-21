@@ -6,7 +6,6 @@ import { Button, InputNumber, DatePicker, Input, message, Radio } from "antd";
 import ProductNameTable from "../components/ProductNameTable";
 
 const Order = () => {
-
   const [workOrderNumber, setworkOrderNumber] = useState("");
   const [clientAddress, setclientAddress] = useState("");
   const [dueDate, setDueDate] = useState(null);
@@ -18,7 +17,7 @@ const Order = () => {
   const [productName, setProductName] = useState("");
   const [value, setValue] = useState(1);
   const [products, setProducts] = useState([]);
- 
+
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const [workOrder, setWorkOrder] = useState({
     workOrderNumber: "",
@@ -38,13 +37,11 @@ const Order = () => {
   const handleAddressChange = (e) => {
     const address = e.target.value;
     setclientAddress(address);
-
   };
 
   const handleQuantityChange = (value) => {
     setValue(value);
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -56,9 +53,12 @@ const Order = () => {
       receivedDate,
       dueDate,
       status,
-      products
+      products,
     };
-    console.log('Updated Work Order:', JSON.stringify(updatedWorkOrder, null, 2));
+    console.log(
+      "Updated Work Order:",
+      JSON.stringify(updatedWorkOrder, null, 2)
+    );
     try {
       const response = await axios.post(
         `${API_BASE_URL}/workorders`,
@@ -84,7 +84,7 @@ const Order = () => {
     }
   };
   const handleAddProduct = () => {
-    if (productName.trim() && value > 0 ) {
+    if (productName.trim() && value > 0) {
       // Add product to work order
       const newProduct = {
         name: productName,
@@ -106,7 +106,6 @@ const Order = () => {
       // Clear input fields
       setProductName("");
       setValue(1);
-      
     }
   };
 
@@ -130,36 +129,36 @@ const Order = () => {
   const handleReceivedDateChange = (date, dateString) => {
     setreceivedDate(dateString);
   };
-  
+
   return (
     <div className="parent">
       {contextHolder}
       <div className="firstline">
-      <Input
+        <Input
           addonBefore="WO#"
           placeholder="Work Order Number"
           value={workOrderNumber} // Controlled input
-  onChange={(e) => setworkOrderNumber(e.target.value)} 
-        
+          onChange={(e) => setworkOrderNumber(e.target.value)}
         />
         <Input
+         style={{marginLeft: 12 }}
           placeholder="Customer Name"
           value={clientAddress}
           onChange={handleAddressChange}
         />
       </div>
       <div className="firstline">
-      <DatePicker
-        placeholder="Select Due Date"
-        style={{ width: 200 ,marginRight:12}}
-        onChange={handleDueDateChange}
-      />
         <DatePicker
-        placeholder="Select Received Date"
-        style={{ width: 200 }}
-        onChange={handleReceivedDateChange}
-      />
-    </div>
+          placeholder="Select Due Date"
+          style={{ width: 200, marginRight: 12 }}
+          onChange={handleDueDateChange}
+        />
+        <DatePicker
+          placeholder="Select Received Date"
+          style={{ width: 200 }}
+          onChange={handleReceivedDateChange}
+        />
+      </div>
       <div className="firstline">
         <Input
           placeholder="Enter Product Name"

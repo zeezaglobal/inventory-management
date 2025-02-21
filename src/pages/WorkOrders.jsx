@@ -34,16 +34,24 @@ const WorkOrders = () => {
   useEffect(() => {
     const fetchWorkOrders = async () => {
       try {
-        const response = await axios.get( `${API_BASE_URL}/workorders`);
+        const response = await axios.get(`${API_BASE_URL}/workorders`);
         // Transform the response data
         const formattedData = response.data.map((item) => ({
           key: item.id, // Use 'id' as the key
           workOrder: item.workOrderNumber, // Use 'workOrderNumber'
           dueDate: item.dueDate, // Use 'dueDate'
+         createdAt:item.createdAt,
           client: item.clientAddress, // Use 'clientAddress'
-          status: [mapStatus(parseInt(item.status, 10))],
-          products: item.products || [], // Convert status code to label
+          status: [mapStatus(parseInt(item.status, 10))], // Convert status code to label
+          products: item.workOrderProducts.map((productItem) => ({
+            id: productItem.product.id,
+            name: productItem.product.name,
+            type: productItem.product.type,
+            quantity: productItem.quantity,
+            status: productItem.status,
+          })),
         }));
+  
         setData(formattedData);
       } catch (error) {
         console.error("Error fetching work orders:", error);
@@ -51,7 +59,7 @@ const WorkOrders = () => {
         setLoading(false);
       }
     };
-
+  
     fetchWorkOrders();
   }, []);
 
