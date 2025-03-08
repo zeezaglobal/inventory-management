@@ -51,7 +51,7 @@ const ProductNameTable = ({ dataSource, onDelete }) => {
       dataIndex: "quantity",
     },
     {
-      title: "Type",
+      title: "Unit",
       dataIndex: "type",
     },
     {
