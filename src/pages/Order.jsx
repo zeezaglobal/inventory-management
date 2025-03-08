@@ -42,7 +42,18 @@ const Order = () => {
   const handleQuantityChange = (value) => {
     setValue(value);
   };
-
+  const clearFields = () => {
+    setworkOrderNumber("");
+    setclientAddress("");
+    setDueDate(null);
+    setreceivedDate(null);
+    setStatus(0);
+    setTableData([]);
+    setType("");
+    setProductName("");
+    setValue(1);
+    setProducts([]);
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -75,6 +86,7 @@ const Order = () => {
         type: "success",
         content: "Work Order Created",
       });
+      clearFields();
     } catch (error) {
       console.error("Error creating work order:", error);
       messageApi.open({

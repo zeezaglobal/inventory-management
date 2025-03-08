@@ -40,7 +40,7 @@ const WorkOrders = () => {
           key: item.id, // Use 'id' as the key
           workOrder: item.workOrderNumber, // Use 'workOrderNumber'
           dueDate: item.dueDate, // Use 'dueDate'
-         createdAt:item.createdAt,
+          createdAt: item.createdAt,
           client: item.clientAddress, // Use 'clientAddress'
           status: [mapStatus(parseInt(item.status, 10))], // Convert status code to label
           products: item.workOrderProducts.map((productItem) => ({
@@ -51,7 +51,7 @@ const WorkOrders = () => {
             status: productItem.status,
           })),
         }));
-  
+
         setData(formattedData);
       } catch (error) {
         console.error("Error fetching work orders:", error);
@@ -59,7 +59,7 @@ const WorkOrders = () => {
         setLoading(false);
       }
     };
-  
+
     fetchWorkOrders();
   }, []);
 
