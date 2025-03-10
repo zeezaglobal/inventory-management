@@ -115,15 +115,7 @@ const TableComponent = ({ data }) => {
           })}
         </>
       ),
-    },  {
-      title: "Actions",
-      key: "actions",
-      render: (_, record) => (
-        <Button type="primary" onClick={() => handleChangeStatus(record)}>
-          Completed
-        </Button>
-      ),
-    },
+    }, 
   ];
 
   return (

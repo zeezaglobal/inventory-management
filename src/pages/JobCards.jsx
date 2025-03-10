@@ -11,8 +11,10 @@ const JobCards = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedJobCard, setSelectedJobCard] = useState(null);
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-
   useEffect(() => {
+    fetchJobCards();
+  }, []);
+  const fetchJobCards = () => {
     axios
       .get(`${API_BASE_URL}/jobcards`) // Use base URL for the API call
       .then((response) => {
@@ -23,7 +25,7 @@ const JobCards = () => {
         setError(error.message);
         setLoading(false);
       });
-  }, [API_BASE_URL]);
+  };
 
   const handleJobCardClick = (jobCard) => {
     setSelectedJobCard(jobCard);
@@ -34,7 +36,17 @@ const JobCards = () => {
     setIsModalVisible(false);
     setSelectedJobCard(null);
   };
-
+  const handleCompleteJobCard = (jobCardId) => {
+    axios
+      .put(`${API_BASE_URL}/jobcards/${jobCardId}/status?status=1`)
+      .then(() => {
+        console.log(`Job Card ${jobCardId} marked as complete.`);
+        fetchJobCards(); // Refresh the job cards list
+      })
+      .catch((error) => {
+        console.log(`Failed to complete job card ${jobCardId}:`, error.message);
+      });
+  };
   const columns = [
     {
       title: "Job Card Number",
@@ -54,6 +66,18 @@ const JobCards = () => {
       title: "Work Order Number",
       dataIndex: ["workOrder", "workOrderNumber"],
       key: "workOrderNumber",
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (_, record) =>
+        record.status === 0 ? (
+          <Button type="primary" onClick={() => handleCompleteJobCard(record.id)}>
+            Complete
+          </Button>
+        ) : (
+          <span>Completed</span>
+        ),
     },
   ];
 
