@@ -15,7 +15,7 @@ const Order = () => {
   const [tableData, setTableData] = useState([]);
   const [type, setType] = useState("");
   const [productName, setProductName] = useState("");
-  const [value, setValue] = useState(1);
+  const [value, setValue] = useState(0);
   const [products, setProducts] = useState([]);
 
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
@@ -51,7 +51,7 @@ const Order = () => {
     setTableData([]);
     setType("");
     setProductName("");
-    setValue(1);
+    setValue(0);
     setProducts([]);
   };
   const handleSubmit = async (e) => {
@@ -136,10 +136,10 @@ const Order = () => {
   };
 
   const handleDueDateChange = (date, dateString) => {
-    setDueDate(dateString);
+    setDueDate(date);
   };
   const handleReceivedDateChange = (date, dateString) => {
-    setreceivedDate(dateString);
+    setreceivedDate(date);
   };
 
   return (
@@ -156,11 +156,13 @@ const Order = () => {
        <DatePicker
           placeholder="Select Due Date"
           style={{ width: 300, marginRight: 12 }}
+          value={dueDate || null} 
           onChange={handleDueDateChange}
         />
         <DatePicker
           placeholder="Select Received Date"
           style={{ width: 300 }}
+          value={receivedDate || null} 
           onChange={handleReceivedDateChange}
         />
       </div>
@@ -182,7 +184,7 @@ const Order = () => {
         />
         <InputNumber
           style={{ marginLeft: 12 }}
-          min={1}
+          min={0}
           max={5000}
           value={value}
           onChange={handleQuantityChange}
