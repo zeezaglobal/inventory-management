@@ -4,7 +4,7 @@ import { Layout } from "antd";
 
 // Importing components for each section
 import Production from "./Order"; // Create this component
-import Settings from "./Settings"; // Create this component
+import Inventory from "./Inventory"; // Create this component
 import Support from "./Support";
 import WorkOrders from "./WorkOrders"; // Create this component
 import JobCards from "./JobCards"; 
@@ -28,8 +28,8 @@ const Dashboard = () => {
         return <WorkOrders />;
       case "Jobcards":
         return <JobCards />;
-      case "settings":
-        return <Settings />;
+      case "inventory":
+        return <Inventory />;
       case "support":
         return <Support />;
       default:
