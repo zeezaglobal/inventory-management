@@ -18,7 +18,7 @@ const SideNav = ({ selectedSection, handleMenuClick }) => {
         <Menu.Item key="Order">New Order</Menu.Item>
         <Menu.Item key="Wordorders">Work Orders</Menu.Item>
         <Menu.Item key="Jobcards">Job Cards</Menu.Item>
-        <Menu.Item key="settings">Settings</Menu.Item>
+        <Menu.Item key="inventory">Inventory</Menu.Item>
         <Menu.Item key="support">Support</Menu.Item>
       </Menu>
     </Sider>
